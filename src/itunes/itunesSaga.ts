@@ -1,11 +1,12 @@
-import { put, takeLatest } from 'redux-saga/effects';
-import { loadedEbooks, searchEbooks } from './itunesSlice';
+import { all, debounce, put, takeEvery, takeLatest } from 'redux-saga/effects';
+import { loadedEbooks, searchEbooks, searchEbooksTyping } from './itunesSlice';
 import * as yup from 'yup';
 import { ActionCreatorWithPayload, PayloadAction } from '@reduxjs/toolkit';
+import { runSaga } from 'redux-saga';
 
 const ebookSchema = yup
   .object({
-    formattedPrice: yup.string().defined(),
+    formattedPrice: yup.string(),
     trackName: yup.string().defined(),
     artworkUrl60: yup.string().defined(),
     trackId: yup.number().defined(),
@@ -42,6 +43,14 @@ function* onSearchEbooks({
   yield put(loadedEbooks(ebooks));
 }
 
-export function* itunesSaga() {
+function* watchSeachEbooks() {
   yield takeLatest(searchEbooks.type, onSearchEbooks);
+}
+
+function* watchSearchEbooksTyping() {
+  yield debounce(1000, searchEbooksTyping.type, onSearchEbooks);
+}
+
+export function* itunesSaga() {
+  yield all([watchSeachEbooks(), watchSearchEbooksTyping()]);
 }

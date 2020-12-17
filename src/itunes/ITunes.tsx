@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { searchEbooks, selectEbooks } from './itunesSlice';
+import { searchEbooks, selectEbooks, searchEbooksTyping } from './itunesSlice';
 
 export function ITunes() {
   const dispatch = useDispatch();
@@ -23,7 +23,11 @@ export function ITunes() {
     <Box>
       <Stack direction="row">
         <Input
-          onChange={(event) => setSearchTerm(event.target.value)}
+          onChange={(event) => {
+            setSearchTerm(event.target.value);
+
+            dispatch(searchEbooksTyping({ searchTerm: event.target.value }));
+          }}
           value={searchTerm}
         />
         <Button

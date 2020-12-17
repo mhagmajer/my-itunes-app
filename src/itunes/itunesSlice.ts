@@ -18,10 +18,17 @@ const itunesSlice = createSlice({
     loadedEbooks(state, action: PayloadAction<Ebook[]>) {
       state.ebooks = action.payload;
     },
+    searchEbooksTyping(state, action: PayloadAction<{ searchTerm: string }>) {
+      // side effects
+    },
   },
 });
 
-export const { searchEbooks, loadedEbooks } = itunesSlice.actions;
+export const {
+  searchEbooks,
+  loadedEbooks,
+  searchEbooksTyping,
+} = itunesSlice.actions;
 
 export const selectEbooks = (state: StoreState) => state.itunes.ebooks;
 
