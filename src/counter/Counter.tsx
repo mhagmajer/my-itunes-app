@@ -4,6 +4,7 @@ import { decCount, incCount, selectCount } from './counterSlice';
 
 export function Counter() {
   // const [count, setCount] = useState(0);
+  // useEffect
   const count = useSelector(selectCount);
   const dispatch = useDispatch();
   return (

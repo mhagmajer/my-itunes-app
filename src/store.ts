@@ -1,11 +1,20 @@
-import { StatHelpText } from '@chakra-ui/react';
 import { configureStore, Store } from '@reduxjs/toolkit';
+import createSagaMiddleware from 'redux-saga';
+import { all } from 'redux-saga/effects';
+import { counterSaga } from './counter/counterSaga';
 import { counterReducer } from './counter/counterSlice';
+
+const sagaMiddleware = createSagaMiddleware();
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
   },
+  middleware: [sagaMiddleware],
+});
+
+sagaMiddleware.run(function* () {
+  yield all([counterSaga()]);
 });
 
 type GetStoreState<S> = S extends Store<infer State, any> ? State : unknown;
