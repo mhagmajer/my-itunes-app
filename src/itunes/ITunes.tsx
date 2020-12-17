@@ -13,7 +13,20 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Ebook } from './itunesSaga';
 import { searchEbooks, selectEbooks, searchEbooksTyping } from './itunesSlice';
+
+function EbookRow({ ebook }: { ebook: Ebook }) {
+  return (
+    <Tr key={ebook.trackId}>
+      <Td>
+        <img alt="artwork" src={ebook.artworkUrl60} />
+      </Td>
+      <Td>{ebook.trackName}</Td>
+      <Td isNumeric>{ebook.formattedPrice}</Td>
+    </Tr>
+  );
+}
 
 export function ITunes() {
   const dispatch = useDispatch();
@@ -48,13 +61,7 @@ export function ITunes() {
         </Thead>
         <Tbody>
           {ebooks.map((ebook) => (
-            <Tr key={ebook.trackId}>
-              <Td>
-                <img alt="artwork" src={ebook.artworkUrl60} />
-              </Td>
-              <Td>{ebook.trackName}</Td>
-              <Td isNumeric>{ebook.formattedPrice}</Td>
-            </Tr>
+            <EbookRow ebook={ebook} key={ebook.trackId} />
           ))}
         </Tbody>
       </Table>

@@ -1,8 +1,7 @@
-import { all, debounce, put, takeEvery, takeLatest } from 'redux-saga/effects';
-import { loadedEbooks, searchEbooks, searchEbooksTyping } from './itunesSlice';
-import * as yup from 'yup';
 import { ActionCreatorWithPayload, PayloadAction } from '@reduxjs/toolkit';
-import { runSaga } from 'redux-saga';
+import { all, call, debounce, put, takeLatest } from 'redux-saga/effects';
+import * as yup from 'yup';
+import { loadedEbooks, searchEbooks, searchEbooksTyping } from './itunesSlice';
 
 const ebookSchema = yup
   .object({
@@ -15,7 +14,7 @@ const ebookSchema = yup
 
 export type Ebook = yup.InferType<typeof ebookSchema>;
 
-async function fetchEbooks(searchTerm: string) {
+export async function fetchEbooks(searchTerm: string) {
   const response = await fetch(
     `https://itunes.apple.com/search?term=${encodeURIComponent(
       searchTerm
@@ -36,11 +35,16 @@ type PayloadActionFromCreator<AC> = AC extends ActionCreatorWithPayload<infer P>
   ? PayloadAction<P>
   : never;
 
-function* onSearchEbooks({
+export function* onSearchEbooks({
   payload: { searchTerm },
 }: PayloadActionFromCreator<typeof searchEbooks>) {
-  const ebooks = yield fetchEbooks(searchTerm);
-  yield put(loadedEbooks(ebooks));
+  try {
+    console.log('loading'); // yield put(setLoadingState(true))
+    const ebooks = yield call(fetchEbooks, searchTerm);
+    yield put(loadedEbooks(ebooks));
+  } finally {
+    console.log('loading done');
+  }
 }
 
 function* watchSeachEbooks() {

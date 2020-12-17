@@ -3,13 +3,15 @@ import { StoreState } from '../store';
 import type { Ebook } from './itunesSaga';
 
 export type ITunesState = {
-  ebooks: Ebook[];
+  ebooks: Ebook[]; // set by searching
+  selectedEbooks: Ebook[]; // added to by selecting checkboxes
 };
 
 const itunesSlice = createSlice({
   name: 'itunes',
   initialState: {
     ebooks: [],
+    selectedEbooks: [],
   } as ITunesState,
   reducers: {
     searchEbooks(state, action: PayloadAction<{ searchTerm: string }>) {
